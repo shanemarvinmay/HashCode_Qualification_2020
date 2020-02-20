@@ -1,14 +1,11 @@
+libraries = list()
 ignore_B = set()
 ignore_L = set()
-D_remaining = 7
-B_to_pts = [1,2,3,6,5,4]
+D_remaining = 0
+B_to_pts = list()
+library_order = list()
 
-def read_file(file_name):
-    D_remaining = 0
-    B_to_pts = list()
-    libraries = list()
-
-
+def read_file(file_name, libraries, B_to_pts, D_remaining):
     f = open(file_name, 'r')#open file
     lines = f.read() #read from file
     lines = lines.split('\n')#split by /n
@@ -34,7 +31,7 @@ def read_file(file_name):
 
             libraries.append(create_libraries(libraries, info))
     
-    return((libraries))
+    return D_remaining
 
 def create_libraries(libraries, lines):
     library_info = dict()
@@ -51,16 +48,42 @@ def create_libraries(libraries, lines):
         books.append(int(book))#add to 'books'
     library_info['books'] = books
 
-    totD = library_info.get('signup') + (len(library_info.get('books'))/ library_info.get('B/D'))
+    totD = int(library_info.get('signup')) + int(len(library_info.get('books'))/ library_info.get('B/D'))
     library_info['totD'] = totD
 
-    # return library_info
+    return library_info
 
-    
-    #get points
-    #loop through library[books]
-        #points += B_to_pts[index]
-    #return points / library[D_remaining]
+def order_libraries(ignore_B, ignore_L, D_remaining, libraries, B_to_pts):
+    # ordering the libraries by the most pts/D 
+    while len(ignore_L) < libraries:
+        # finding L with most pts/D 
+        idx = -1
+        most = -1
+        most_numB = -1
+        for L in range(len(libraries)):
+            if L in ignore_L or libraries[L]['signup'] >= D_remaining:
+                continue
+            pts, numB = calc_pts(libraries[L], D_remaining, B_to_pts)
+            if pts > most:
+                idx = L
+                most = pts
+                most_numB = numB
+        D_remaining -= libraries[idx]['signup']
+        # adding all B to ignore_B
+        for i in range(most_numB):
+            ignore_B.add(libraries[idx]['books'][i])
+        ignore_L.add(idx)
+        library_order.append(idx)
+    return library_order
+
+def calc_pts(L,D_remain,b_pts):
+  numB = L['B/D'] * min(D_remain - L['signup'], L['totD'])
+  s = i = 0
+  while i < numB and numB < len(L['books']):
+    s+=b_pts[L['books'[i]]]
+    i+=1
+  return s,numB
+    # return 0
 
 def write_to_file(library_order, libraries):
     output = ""
@@ -78,40 +101,13 @@ def write_to_file(library_order, libraries):
         
         output += "\n\n"
 
+
     print(output)
 
-def order_ls(ignore_B, ignore_L, D_remaining, Ls, B_to_pts):
-    output = []
-    # ordering the ls by the most pts/D 
-    while len(ignore_L) < Ls:
-        # finding L with most pts/D 
-        idx = -1
-        most = -1
-        most_numB = -1
-        for L in Ls:
-            if L in ignore_L or L['signup'] >= D_remaining:
-                continue
-            pts, numB = calc_pts_D( Ls[L] )
-            if pts > most:
-                idx = L
-                most = pts
-                most_numB = numB
-        D_remaining -= Ls[idx]['signup']
-        # adding all B to ignore_B
-        for i in range(most_numB):
-            ignore_B.add(Ls[idx]['books'][i])
-        ignore_L.add(idx)
-        output.append(idx)
-    return output
 
-def calc_pts(L,D_remain,b_pts):
-  numB = L['B/D']*min(D_remain-L['signup'],L['totalD']):
-  sim = i = 0
-  while i < numB and numB < len(L['books']):
-    sum+=b_pts[L['books'[i]]]
-    i+=1
-  return sum,numB
+D_remaining = read_file('a-example.txt', libraries, B_to_pts, D_remaining)
 
-libraries = read_file('a-example.txt')
+print(order_libraries(ignore_B, ignore_L, D_remaining, libraries, B_to_pts))
+# order_libraries(ignore_B, ignore_L, D_remaining, libraries, B_to_pts)
 
-write_to_file([1, 0], libraries)
+# write_to_file(library_order, libraries)
