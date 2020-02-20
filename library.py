@@ -1,3 +1,8 @@
+ignore_B = set()
+ignore_L = set()
+D_remaining = 7
+B_to_pts = [1,2,3,6,5,4]
+
 def read_file(file_name):
     D_remaining = 0
     B_to_pts = list()
@@ -31,7 +36,6 @@ def read_file(file_name):
     
     return((libraries))
 
-
 def create_libraries(libraries, lines):
     library_info = dict()
     books = list()
@@ -50,7 +54,7 @@ def create_libraries(libraries, lines):
     totD = library_info.get('signup') + (len(library_info.get('books'))/ library_info.get('B/D'))
     library_info['totD'] = totD
 
-    return library_info
+    # return library_info
 
 #def get_points_per_day(library, B_to_pts): (passing in one specific library & B_to_pts)
     
@@ -76,6 +80,31 @@ def write_to_file(library_order, libraries):
         output += "\n\n"
 
     print(output)
+
+
+def order_ls(ignore_B, ignore_L, D_remaining, Ls, B_to_pts):
+    output = []
+    # ordering the ls by the most pts/D 
+    while len(ignore_L) < Ls:
+        # finding L with most pts/D 
+        idx = -1
+        most = -1
+        most_numB = -1
+        for L in Ls:
+            if L in ignore_L or L['signup'] >= D_remaining:
+                continue
+            pts, numB = calc_pts_D( Ls[L] )
+            if pts > most:
+                idx = L
+                most = pts
+                most_numB = numB
+        D_remaining -= Ls[idx]['signup']
+        # adding all B to ignore_B
+        for i in range(most_numB):
+            ignore_B.add(Ls[idx]['books'][i])
+        ignore_L.add(idx)
+        output.append(idx)
+    return output
 
 
 libraries = read_file('a-example.txt')
