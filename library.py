@@ -12,15 +12,13 @@ def read_file(file_name):
     for x in range(len(lines)):
         if x is 0: #get D_remaining
     
-            D_remaining
-     = lines[x][-1]
+            D_remaining = lines[x][-1]
             continue
         elif x is 1: #get B_to_pts
     
             for number in lines[x]:
                 if number is not ' ':
-                    B_to_pts
-            .append(int(number))
+                    B_to_pts.append(int(number))
             continue
 
         #current & next line be sent to create_libraries
@@ -31,13 +29,13 @@ def read_file(file_name):
 
             libraries.append(create_libraries(libraries, info))
     
-    print((libraries))
+    return((libraries))
 
 
 def create_libraries(libraries, lines):
     library_info = dict()
     books = list()
-    D_remaining = 0
+    totD = 0
 
     lines[0] = lines[0].replace(" ", "")
     lines[1] = lines[1].replace(" ", "")
@@ -49,21 +47,37 @@ def create_libraries(libraries, lines):
         books.append(int(book))#add to 'books'
     library_info['books'] = books
 
-    D_remaining = library_info.get('signup') + (len(library_info.get('books'))/ library_info.get('B/D'))
-    library_info['D_remaining'] = D_remaining
+    totD = library_info.get('signup') + (len(library_info.get('books'))/ library_info.get('B/D'))
+    library_info['totD'] = totD
 
     return library_info
 
-#def get_points_per_day(library, B_to_pts
-): (passing in one specific library & B_to_pts
-)
+#def get_points_per_day(library, B_to_pts): (passing in one specific library & B_to_pts)
     
     #get points
     #loop through library[books]
-        #points += B_to_pts
-        [index]
-    #return points / library[D_remaining
-    ]
+        #points += B_to_pts[index]
+    #return points / library[D_remaining]
+
+def write_to_file(library_order, libraries):
+    output = ""
+
+    output += str(len(library_order)) + "\n\n"
+
+    for x in range(len(library_order)):
+        output += str(library_order[0]) + " " + str(len(libraries[x]['books'])) + "\n\n"
+
+        if x is 0:
+            output += "\n"
+        
+        for book in libraries[x]['books']:
+            output += str(book) + " "
+        
+        output += "\n\n"
+
+    print(output)
 
 
-read_file('a-example.txt')
+libraries = read_file('a-example.txt')
+
+write_to_file([1, 0], libraries)
