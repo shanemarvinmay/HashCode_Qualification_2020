@@ -56,7 +56,6 @@ def create_libraries(libraries, lines):
 
     # return library_info
 
-#def get_points_per_day(library, B_to_pts): (passing in one specific library & B_to_pts)
     
     #get points
     #loop through library[books]
@@ -80,7 +79,6 @@ def write_to_file(library_order, libraries):
         output += "\n\n"
 
     print(output)
-
 
 def order_ls(ignore_B, ignore_L, D_remaining, Ls, B_to_pts):
     output = []
@@ -106,6 +104,13 @@ def order_ls(ignore_B, ignore_L, D_remaining, Ls, B_to_pts):
         output.append(idx)
     return output
 
+def calc_pts(L,D_remain,b_pts):
+  numB = L['B/D']*min(D_remain-L['signup'],L['totalD']):
+  sim = i = 0
+  while i < numB and numB < len(L['books']):
+    sum+=b_pts[L['books'[i]]]
+    i+=1
+  return sum,numB
 
 libraries = read_file('a-example.txt')
 
