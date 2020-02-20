@@ -31,7 +31,7 @@ def read_file(file_name, libraries, B_to_pts, D_remaining):
 
             libraries.append(create_libraries(libraries, info))
     
-    return D_remaining
+    return int(D_remaining)
 
 def create_libraries(libraries, lines):
     library_info = dict()
@@ -106,6 +106,7 @@ def write_to_file(library_order, libraries):
 
 
 D_remaining = read_file('a-example.txt', libraries, B_to_pts, D_remaining)
+
 
 print(order_libraries(ignore_B, ignore_L, D_remaining, libraries, B_to_pts))
 # order_libraries(ignore_B, ignore_L, D_remaining, libraries, B_to_pts)
