@@ -2,7 +2,13 @@ def read_file(file_name):
     f = open(file_name, 'r')
 
     f.close()
-
+def calc_pts(L,D_remain,b_pts):
+  numB = L['B/D']*min(D_remain-L['signup'],L['totalD']):
+  sim = i = 0
+  while i < numB and numB < len(L['books']):
+    sum+=b_pts[L['books'[i]]]
+    i+=1
+  return sum,numB
 def order_ls(ignore_B, ignore_L, D_remaining, Ls, B_to_pts):
     output = []
     # ordering the ls by the most pts/D 
